@@ -37,3 +37,9 @@ def plot_distribution_toa(list_in, num_bins= 20, range_default = None, xaxis = '
     if pic==True:
         plt.show()
     plt.close(fig)
+
+def func1(x, a, b, c, d):
+    return a + b*(x**1) + c*(x**2) + d*(x**3)
+
+def func0(x, a, b):
+    return a + b*(x**1)    
