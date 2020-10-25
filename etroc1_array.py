@@ -218,7 +218,7 @@ def heatmap(data, row_labels, col_labels, ax=None,
     return im, cbar
 
 
-def etroc1_array.annotate_heatmap(im, data=None, valfmt="{x:.2f}",
+def annotate_heatmap(im, data=None, valfmt="{x:.2f}",
                      textcolors=["black", "white"],
                      threshold=None, **textkw):
     """
@@ -275,3 +275,34 @@ def etroc1_array.annotate_heatmap(im, data=None, valfmt="{x:.2f}",
             texts.append(text)
 
     return texts
+
+
+
+
+def tw_correction (toa, tot, poly3rd=True, LindseyFit=True):
+    if poly3rd == True:
+        popt_toa, pcov_toa = curve_fit(func1, tot, toa)
+    else:
+        popt_toa, pcov_toa = curve_fit(func0, tot, toa)
+    
+    #################################
+    #time walk correction and fit
+    #################################
+
+
+
+    # Generate data 
+    if poly3rd == True:
+        toa_fitted=func1(tot, *popt_toa)
+    else:
+        toa_fitted=func0(tot, *popt_toa)
+    
+    toa_corrected = toa - toa_fitted
+    
+    
+    if LindseyFit == True:
+        mu_corrected, sigma_corrected, popt_corrected, pcov_corrected = gaus_fit(to_fit=toa_corrected, num_bins=50)
+    else:
+        mu_corrected, sigma_corrected = norm.fit(toa_corrected)
+
+    return mu_corrected, abs(sigma_corrected), toa_corrected
